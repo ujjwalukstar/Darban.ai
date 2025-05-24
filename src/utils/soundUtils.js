@@ -1,7 +1,7 @@
 // Simple sound utility using Web Audio API and fallback to HTML5 Audio
 export const playSound = (soundName) => {
   try {
-    // I have Createc audio element
+    // I have Created audio element
     const audio = new Audio(`/sounds/${soundName}.mp3`)
     audio.volume = 0.3 // Set volume to 30%
 
