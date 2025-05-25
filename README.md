@@ -1,12 +1,46 @@
-# React + Vite
+# Blink Tac Toe
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern twist on the classic Tic Tac Toe game with vanishing emojis and category-based gameplay.
 
-Currently, two official plugins are available:
+## How to Play
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. **Setup**: Each player chooses an emoji category (animals, food, sports, etc.)
+2. **Gameplay**: Players take turns placing random emojis from their category
+3. **Vanishing Rule**: Each player can only have 3 emojis on the board at once
+4. **FIFO Logic**: When placing a 4th emoji, the oldest one disappears
+5. **Restriction**: Can't place new emoji where your oldest just vanished
+6. **Winning**: Get 3 of your emojis in a row (horizontal, vertical, or diagonal)
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React.js with Vite
+- CSS3 for styling
+- Web Audio API for sound effects
+
+## Features
+
+- 6 emoji categories with 8 emojis each
+- Dynamic board that changes as emojis vanish
+- Sound effects for game actions
+- Score tracking across multiple rounds
+- Responsive design for mobile and desktop
+- Simple, clean UI
+
+## Installation
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Game Rules Explained
+
+The "vanishing" mechanic is what makes this game unique:
+
+- Traditional Tic Tac Toe allows 9 moves maximum
+- Blink Tac Toe allows unlimited moves due to the vanishing rule
+- Strategy involves managing your 3-emoji queue
+- Creates dynamic gameplay where the board constantly changes
+- No draws possible since emojis keep disappearing
+
+This creates a more strategic and engaging experience than traditional Tic Tac Toe.

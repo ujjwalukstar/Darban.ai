@@ -15,6 +15,11 @@ function GameBoard({ playerCategories, onGameEnd, onNewGame }) {
     player1: [],
     player2: [],
   })
+  // Track the original position of first emoji for each player
+  const [firstEmojiPositions, setFirstEmojiPositions] = useState({
+    player1: null,
+    player2: null,
+  })
   const [currentEmoji, setCurrentEmoji] = useState("")
   const [winner, setWinner] = useState(null)
   const [winningCells, setWinningCells] = useState([])
@@ -26,15 +31,16 @@ function GameBoard({ playerCategories, onGameEnd, onNewGame }) {
     return categoryEmojis[Math.floor(Math.random() * categoryEmojis.length)]
   }
 
-  // Initialize first emoji
+  // Initialize first emoji - FIXED: Added dependency array
   useEffect(() => {
-    setCurrentEmoji(getRandomEmoji(1))
-  }, [])
+    if (playerCategories.player1) {
+      setCurrentEmoji(getRandomEmoji(1))
+    }
+  }, [playerCategories.player1]) // Fixed line 37 - added proper dependency
 
   // Play sound effect
   const playSound = (type) => {
     try {
-      // Create audio context for beep sounds
       const audioContext = new (window.AudioContext || window.webkitAudioContext)()
       const oscillator = audioContext.createOscillator()
       const gainNode = audioContext.createGain()
@@ -62,6 +68,9 @@ function GameBoard({ playerCategories, onGameEnd, onNewGame }) {
           frequency = 200
           duration = 0.3
           break
+        default:
+          frequency = 440
+          duration = 0.1
       }
 
       oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime)
@@ -73,7 +82,7 @@ function GameBoard({ playerCategories, onGameEnd, onNewGame }) {
       oscillator.start(audioContext.currentTime)
       oscillator.stop(audioContext.currentTime + duration)
     } catch (error) {
-      console.log("Audio not supported")
+      console.log("Audio not supported:", error) // Fixed line 79 - added error parameter
     }
   }
 
@@ -112,9 +121,10 @@ function GameBoard({ playerCategories, onGameEnd, onNewGame }) {
     const currentPlayerEmojis = playerEmojis[playerKey]
     const currentPlayerPositions = playerPositions[playerKey]
 
-    // Check if trying to place on recently vanished position
-    if (currentPlayerEmojis.length === 3 && index === currentPlayerPositions[0]) {
+    // Check if trying to place 4th emoji on the ORIGINAL position of 1st emoji
+    if (currentPlayerEmojis.length === 3 && index === firstEmojiPositions[playerKey]) {
       playSound("error")
+      alert("Cannot place 4th emoji where your 1st emoji was originally placed!")
       return
     }
 
@@ -128,12 +138,28 @@ function GameBoard({ playerCategories, onGameEnd, onNewGame }) {
     const newEmojis = [...currentPlayerEmojis, currentEmoji]
     const newPositions = [...currentPlayerPositions, index]
 
-    // Handle vanishing rule
+    // Track first emoji position when player places their first emoji
+    if (currentPlayerEmojis.length === 0) {
+      setFirstEmojiPositions((prev) => ({
+        ...prev,
+        [playerKey]: index,
+      }))
+    }
+
+    // Handle vanishing rule - FIFO (First In, First Out)
     if (newEmojis.length > 3) {
       newEmojis.shift() // Remove oldest emoji
       const vanishedPosition = newPositions.shift() // Remove oldest position
       newBoard[vanishedPosition] = null // Clear from board
       playSound("vanish")
+
+      // Update first emoji position when it gets removed
+      if (newPositions.length > 0) {
+        setFirstEmojiPositions((prev) => ({
+          ...prev,
+          [playerKey]: newPositions[0], // New first emoji position
+        }))
+      }
     }
 
     // Update state
@@ -175,6 +201,15 @@ function GameBoard({ playerCategories, onGameEnd, onNewGame }) {
             <h3>Player {currentPlayer}'s Turn</h3>
             <div className="current-emoji">{currentEmoji}</div>
             <p>Emojis on board: {playerEmojis[`player${currentPlayer}`].length}/3</p>
+            {playerEmojis[`player${currentPlayer}`].length === 3 && (
+              <p className="warning">⚠️ Next emoji will replace your oldest emoji!</p>
+            )}
+            {firstEmojiPositions[`player${currentPlayer}`] !== null &&
+              playerEmojis[`player${currentPlayer}`].length === 3 && (
+                <p className="restriction">
+                  🚫 Cannot place on cell {firstEmojiPositions[`player${currentPlayer}`] + 1}
+                </p>
+              )}
           </div>
         ) : (
           <div className="winner-info">
@@ -187,7 +222,12 @@ function GameBoard({ playerCategories, onGameEnd, onNewGame }) {
         {board.map((cell, index) => (
           <div
             key={index}
-            className={`board-cell ${winningCells.includes(index) ? "winning" : ""}`}
+            className={`board-cell ${winningCells.includes(index) ? "winning" : ""} ${
+              playerEmojis[`player${currentPlayer}`].length === 3 &&
+              index === firstEmojiPositions[`player${currentPlayer}`]
+                ? "restricted"
+                : ""
+            }`}
             onClick={() => handleCellClick(index)}
           >
             {cell}
@@ -200,12 +240,13 @@ function GameBoard({ playerCategories, onGameEnd, onNewGame }) {
       </div>
 
       <div className="game-rules">
-        <h4>Quick Rules:</h4>
+        <h4>Game Rules:</h4>
         <ul>
-          <li>Get 3 in a row to win</li>
-          <li>Max 3 emojis per player on board</li>
-          <li>Oldest emoji vanishes when placing 4th</li>
-          <li>Can't place where your emoji just vanished</li>
+          <li>Get 3 in a row to win (horizontal, vertical, diagonal)</li>
+          <li>Max 3 emojis per player on board at any time</li>
+          <li>When placing 4th emoji, oldest emoji vanishes (FIFO)</li>
+          <li>Cannot place 4th emoji where your 1st emoji was originally placed</li>
+          <li>Random emoji assigned from your category each turn</li>
         </ul>
       </div>
     </div>

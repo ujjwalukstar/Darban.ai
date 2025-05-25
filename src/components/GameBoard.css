@@ -28,6 +28,17 @@
 .turn-info p {
   color: #666;
   font-size: 1rem;
+  margin: 5px 0;
+}
+
+.warning {
+  color: #e17055 !important;
+  font-weight: bold;
+}
+
+.restriction {
+  color: #d63031 !important;
+  font-weight: bold;
 }
 
 .winner-info h3 {
@@ -87,6 +98,17 @@
   animation: pulse 1s infinite;
 }
 
+.board-cell.restricted {
+  background: #ffcccc;
+  border-color: #d63031;
+  cursor: not-allowed;
+}
+
+.board-cell.restricted:hover {
+  transform: none;
+  border-color: #d63031;
+}
+
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -119,7 +141,7 @@
   padding: 20px;
   border-radius: 10px;
   border-left: 4px solid #74b9ff;
-  max-width: 400px;
+  max-width: 500px;
 }
 
 .game-rules h4 {
@@ -136,7 +158,8 @@
   margin-bottom: 8px;
   padding-left: 20px;
   position: relative;
-  color: #666;
+  line-height: 1.5;
+  color: #555;
 }
 
 .game-rules li:before {
@@ -145,6 +168,7 @@
   font-weight: bold;
   position: absolute;
   left: 0;
+  font-size: 1.2rem;
 }
 
 @media (max-width: 768px) {
