@@ -1,0 +1,165 @@
+.game-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.game-info {
+  text-align: center;
+}
+
+.turn-info h3 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.current-emoji {
+  font-size: 3rem;
+  margin: 15px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 50%;
+  display: inline-block;
+  border: 3px solid #74b9ff;
+}
+
+.turn-info p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.winner-info h3 {
+  font-size: 2rem;
+  color: #00b894;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 15px;
+  border: 3px solid #ddd;
+}
+
+.board-cell {
+  width: 80px;
+  height: 80px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.board-cell:hover {
+  border-color: #74b9ff;
+  transform: scale(1.05);
+}
+
+.board-cell.winning {
+  background: #00b894;
+  border-color: #00b894;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.game-controls button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #e17055;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.game-controls button:hover {
+  background: #d63031;
+}
+
+.game-rules {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #74b9ff;
+  max-width: 400px;
+}
+
+.game-rules h4 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.game-rules ul {
+  list-style: none;
+  padding: 0;
+}
+
+.game-rules li {
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+  color: #666;
+}
+
+.game-rules li:before {
+  content: "•";
+  color: #74b9ff;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+@media (max-width: 768px) {
+  .board-cell {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+
+  .current-emoji {
+    font-size: 2.5rem;
+    padding: 10px;
+  }
+
+  .game-rules {
+    max-width: 100%;
+  }
+}
