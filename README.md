@@ -28,8 +28,15 @@ A modern twist on the classic Tic Tac Toe game with vanishing emojis and categor
 
 ## Installation
 
+git clone "https://github.com/ujjwalukstar/Darban.ai.git"
+
 \`\`\`bash
 npm install
+\`\`\`
+
+## Run Development Server
+
+\`\`\`bash
 npm run dev
 \`\`\`
 
